@@ -14,6 +14,11 @@ SHEET = GSPREAD_CLIENT.open('margin-calculator')
 
 margins = SHEET.worksheet('margins')
 
+bill_data = None
+contract_duration = None
+client_burdens = None
+company_liabilities = None
+
 def validate_bill_rate(bill_data):
     """
     Inside the TRY, converts the input data to an integer.
@@ -48,14 +53,14 @@ def validate_burdens(client_burdens):
     """
     try:
         original_float = float(client_burdens)
-        rounded_float = round(origin_float, 2)
+        rounded_float = round(original_float, 2)
         return rounded_float
     except ValueError as e:
-        print('Invalid input {e}, please try again \n')
+        print(f'Invalid input {e}, please try again \n')
         return False
     return True
 
-def validate_liabilites(company_liabilities):
+def validate_liabilities(company_liabilities):
     """
     inside the TRY, conver the input data into a floating integer.
     Raise a ValueError if data can not be converted
@@ -63,10 +68,10 @@ def validate_liabilites(company_liabilities):
     """
     try:
         original_float = float(company_liabilities)
-        rounded_float = round(origin_float, 2)
+        rounded_float = round(original_float, 2)
         return rounded_float
     except ValueError as e:
-        print('Invalid input {e}, please try again \n')
+        print(f'Invalid input {e}, please try again \n')
         return False
     return True
 
@@ -139,12 +144,20 @@ def get_liabilities():
         print("data should be in number format, no need to add '%'")
         print("Example: 2.5")
 
-        company_liabilities = input('Enter Client Burdens here: ')
+        company_liabilities = input('Enter Company Liabilities here: ')
 
         if validate_liabilities(company_liabilities):
             print("Data input valid \n")
             break
     return company_liabilities
+
+#def update_worksheet(data, worksheet):
+#    """
+#    updates the worksheet with the input data to the relevant column
+#    """
+#    print(f'updating worksheet: {worksheet}...\n')
+#    worksheet_to_update = SHEET.worksheet(worksheet)
+    
 
 
 # Call the functions to start data collection
