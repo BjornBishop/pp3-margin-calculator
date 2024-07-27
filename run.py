@@ -14,19 +14,16 @@ SHEET = GSPREAD_CLIENT.open('margin-calculator')
 
 margins = SHEET.worksheet('margins')
 
-bill_data = None
-contract_duration = None
-client_burdens = None
-company_liabilities = None
+ideal_margin = 0.85
 
-def validate_bill_rate(bill_data):
+def validate_bill_rate(new_bill_data):
     """
     Inside the TRY, converts the input data to an integer.
     Raise a ValueError if data cannot be converted
     or if multiple values are input.
     """
     try:
-        int(bill_data)
+        int(new_bill_data)
     except ValueError as e:
         print(f'Invalid input {e}, please try again\n')
         return False
@@ -87,12 +84,12 @@ def get_bill_rate():
         print("Data should be in number format. No need to add '/h'.")
         print("Example: 800 or 1000 \n")
 
-        bill_data = input('Enter Bill Rate here: ')
+        new_bill_data = input('Enter Bill Rate here: ')
 
-        if validate_bill_rate(bill_data):
+        if validate_bill_rate(new_bill_data):
             print("Data input valid \n")
             break
-    return bill_data
+    return new_bill_data
 
 def get_contract_duration():
     """
@@ -151,23 +148,80 @@ def get_liabilities():
             break
     return company_liabilities
 
-#def update_worksheet(data, worksheet):
-#    """
-#    updates the worksheet with the input data to the relevant column
-#    """
-#    print(f'updating worksheet: {worksheet}...\n')
-#    worksheet_to_update = SHEET.worksheet(worksheet)
-    
+def calculate_pay_rate(new_bill_data, ideal_margin):
+    try:
+        bill_rate = float(new_bill_data)  # Convert input to a float
+    except ValueError:
+        print("Invalid input. Please enter a valid numeric bill rate.")
+        return None
 
+    pay_rate = bill_rate * ideal_margin
+    print(f"Pay rate calculated at: {pay_rate:.2f}")
+    return pay_rate
+
+def update_worksheet_bill(data, worksheet):
+    """
+    Updates the worksheet with the input data to worksheet: margins column: bill.
+    """
+    print(f'Updating worksheet: {worksheet}...\n')
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    worksheet_to_update.append_row([int(data)])
+    print(f'Worksheet {worksheet} updated successfully \n')
+
+def update_worksheet_contract(data, worksheet):
+    """
+    Updates the worksheet with the input data to worksheet: margins column: duration.
+    """
+    print(f'Updating worksheet: {worksheet}...\n')
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    last_row_index = len(worksheet_to_update.col_values(1))
+    worksheet_to_update.update_cell(last_row_index, 2, int(data))
+    print(f'Worksheet {worksheet} updated successfully \n')
+
+def update_worksheet_burden(data, worksheet):
+    """
+    updates the worksheet with the burden data to worksheet: margins, column: burdens
+    """
+    print(f'Updating worksheet: {worksheet}...')
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    last_row_index = len(worksheet_to_update.col_values(1))
+    worksheet_to_update.update_cell(last_row_index, 3, float(data))
+    print(f'Worksheet {worksheet} updated successfully \n')
+
+def update_worksheet_liabilities(data, worksheet):
+    """
+    updates the worksheet with the liabilities data to worksheet: margins, column: liabilities
+    """
+    print(f'Updating worksheet: {worksheet}...')
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    last_row_index = len(worksheet_to_update.col_values(1))
+    worksheet_to_update.update_cell(last_row_index, 4, float(data))
+    print(f'Worksheet {worksheet} updated successfully \n')
+
+def update_worksheet_pay(data, worksheet):
+    """
+    Updates the worksheet with the pay rate calculated into worksheet: margins, Column: pay rate
+    """
+    print(f'Updating worksheet: {worksheet}...')
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    last_row_index = len(worksheet_to_update.col_values(1))
+    worksheet_to_update.update_cell(last_row_index, 5, int(data))
+    print(f'Worksheet {worksheet} updated')
 
 # Call the functions to start data collection
 def main():
     """
     Main function holding queue of function for calculating margins
     """
-    get_bill_rate()
-    get_contract_duration()
-    get_burdens()
-    get_liabilities()
+    new_bill_data = get_bill_rate()
+    update_worksheet_bill(new_bill_data, "margins")
+    contract_duration = get_contract_duration()
+    update_worksheet_contract(contract_duration, "margins")
+    client_burdens = get_burdens()
+    update_worksheet_burden(client_burdens, "margins")
+    company_liabilities = get_liabilities()
+    update_worksheet_liabilities(company_liabilities, "margins")
+    pay_rate = calculate_pay_rate(new_bill_data, ideal_margin)
+    update_worksheet_pay(pay_rate, "margins")
 
-main()
+main() 
