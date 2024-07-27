@@ -55,6 +55,21 @@ def validate_burdens(client_burdens):
         return False
     return True
 
+def validate_liabilites(company_liabilities):
+    """
+    inside the TRY, conver the input data into a floating integer.
+    Raise a ValueError if data can not be converted
+    or if multiple values are input
+    """
+    try:
+        original_float = float(company_liabilities)
+        rounded_float = round(origin_float, 2)
+        return rounded_float
+    except ValueError as e:
+        print('Invalid input {e}, please try again \n')
+        return False
+    return True
+
 def get_bill_rate():
     """
     Get bill rate data from the user.
