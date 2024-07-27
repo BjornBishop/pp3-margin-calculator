@@ -115,15 +115,16 @@ def get_burdens():
     via the terminal, which much be a float. The loop will 
     repeatedly request data until the input is valid 
     """
-    print("Please enter the burdens held with the client.")
-    print("data should be in number format, no need to add '%'")
-    print("Example: 2.5")
+    while True:
+        print("Please enter the burdens held with the client.")
+        print("data should be in number format, no need to add '%'")
+        print("Example: 2.5")
 
-    client_burdens = input('Enter Client Burdens here: ')
+        client_burdens = input('Enter Client Burdens here: ')
 
-    if validate_burdens(client_burdens):
-        print("Data input valid \n")
-        break
+        if validate_burdens(client_burdens):
+            print("Data input valid \n")
+            break
     return client_burdens
 
 def get_liabilities():
@@ -133,15 +134,16 @@ def get_liabilities():
     via the terminal, which much be a float. The loop will 
     repeatedly request data until the input is valid 
     """
-    print("Please enter the liabilities held with the client.")
-    print("data should be in number format, no need to add '%'")
-    print("Example: 2.5")
+    while True:
+        print("Please enter the liabilities held with the client.")
+        print("data should be in number format, no need to add '%'")
+        print("Example: 2.5")
 
-    company_liabilities = input('Enter Client Burdens here: ')
+        company_liabilities = input('Enter Client Burdens here: ')
 
-    if validate_liabilities(company_liabilities):
-        print("Data input valid \n")
-        break
+        if validate_liabilities(company_liabilities):
+            print("Data input valid \n")
+            break
     return company_liabilities
 
 
