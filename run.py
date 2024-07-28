@@ -186,6 +186,10 @@ def save_contract():
     return save_contract_value
 
 def calculate_pay_rate(new_bill_data, ideal_margin):
+    """
+    function to alculate the pay rate a consultant can take with a given contract. 
+    calculation is done based on new_bill_data multiplied by the ideal margins (15%)
+    """
     try:
         bill_rate = float(new_bill_data)  
     except ValueError:
@@ -208,6 +212,12 @@ def calculate_deal_value(new_bill_data, contract_duration):
     return contract_value
 
 def calculate_margin(client_burdens, company_liabilities):
+    """
+    Function to calculate the what margins are required which is used to calculate the weekly spread 
+    client_burdens and company_liabilities are converted into floats and rounded to 2 decimal places 
+    rounded_burden is added to rounded_liabilities and 100 is added. 
+    the figure is then divided by 100 in order to get the correct margin amount.
+    """
     burden_float = float(client_burdens)
     rounded_burden = round(burden_float, 2)
     liabilities_float = float(company_liabilities)
@@ -217,6 +227,12 @@ def calculate_margin(client_burdens, company_liabilities):
     return final_margin
 
 def calculate_weekly_spread(final_margin, new_bill_data, pay_rate):
+    """
+    calculates the weekly spread by converting final_margin, new_bill_data and pay_rate 
+    into floats and rounds them to 2 decimal places. 
+    rounded_margin is subtracted from rounded_bill which is multiplied by rounded_pay
+    and then multipled by 40 to indicate 40 hours in a week. 
+    """
     margin_float = float(final_margin)
     rounded_margin = round(margin_float, 2)
     bill_float = float(new_bill_data)
@@ -225,6 +241,10 @@ def calculate_weekly_spread(final_margin, new_bill_data, pay_rate):
     rounded_pay = round(pay_float)
     weekly_spread = (rounded_bill-(rounded_margin)*rounded_pay)*40
     return weekly_spread
+
+def calculate_total_weekly_spread():
+    get_spread = SHEET.worksheet('deals').get_all_values
+    spread_column = get_spread
 
 def update_worksheet_bill(data, worksheet):
     """
