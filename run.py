@@ -160,7 +160,8 @@ def get_liabilities():
     while True:
         print("Please enter the liabilities held with the client.")
         print("data should be in number format, no need to add '%'")
-        print("Example: 2.5")
+        print("If standard T&M contract Liabilities = 0")
+        print("If service contract Liabilities = X.XX")
 
         company_liabilities = input('Enter Company Liabilities here: \n')
 
@@ -209,7 +210,9 @@ def calculate_deal_value(new_bill_data, contract_duration):
 def calculate_margin(client_burdens, company_liabilities):
     burden_float = float(client_burdens)
     rounded_burden = round(burden_float, 2)
-    second_margin = rounded_burden + 100
+    liabilities_float = float(company_liabilities)
+    rounded_liabilities = round(liabilities_float)
+    second_margin = (rounded_burden + rounded_liabilities) + 100
     final_margin = second_margin / 100
     return final_margin
 
