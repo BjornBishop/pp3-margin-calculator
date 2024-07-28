@@ -105,7 +105,7 @@ def get_bill_rate():
         print("Data should be in number format. No need to add '/h'.")
         print("Example: 800 or 1000 \n")
 
-        new_bill_data = input('Enter Bill Rate here: ')
+        new_bill_data = input('Enter Bill Rate here: \n')
 
         if validate_bill_rate(new_bill_data):
             print("Data input valid \n")
@@ -124,7 +124,7 @@ def get_contract_duration():
         print("Data should be in number format. No need to add 'months' etc.")
         print("Example: 6 or 12 \n")
 
-        contract_duration = input('Enter Contract Duration here: ')
+        contract_duration = input('Enter Contract Duration here: \n')
 
         if validate_contract(contract_duration):
             print("Data input valid \n")
@@ -143,7 +143,7 @@ def get_burdens():
         print("data should be in number format, no need to add '%'")
         print("Example: 2.5")
 
-        client_burdens = input('Enter Client Burdens here: ')
+        client_burdens = input('Enter Client Burdens here: \n')
 
         if validate_burdens(client_burdens):
             print("Data input valid \n")
@@ -162,7 +162,7 @@ def get_liabilities():
         print("data should be in number format, no need to add '%'")
         print("Example: 2.5")
 
-        company_liabilities = input('Enter Company Liabilities here: ')
+        company_liabilities = input('Enter Company Liabilities here: \n')
 
         if validate_liabilities(company_liabilities):
             print("Data input valid \n")
@@ -178,7 +178,7 @@ def save_contract():
     while True:
         print("Would you like to save the calculated contract value?")
         print("If 'No', the calculation will be discarded \n")
-        save_contract_value = input("Y/N: ")
+        save_contract_value = input("Y/N: \n")
         if validate_deal(save_contract_value):
             print(f'Contract value saving... \n')
             break
