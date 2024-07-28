@@ -82,6 +82,7 @@ def validate_deal(save_contract_value):
     try:
         if save_contract_value == "Y":
             save_contract_selected = None
+            save_weekly_spread = None
             return True
         elif save_contract_value == "N":
             print(f'Contract value discarded \n')
@@ -91,7 +92,6 @@ def validate_deal(save_contract_value):
     except ValueError as e:
         print(f'Invalid input: {e}. Please try again. \n')
         return False
-
 
 def get_bill_rate():
     """
@@ -203,7 +203,7 @@ def calculate_deal_value(new_bill_data, contract_duration):
     contract_int = int(contract_duration)
     hourly_contract = contract_int * 160
     contract_value = bill_int * hourly_contract
-    print(f'Total deal value calculated: {contract_value}')
+    print(f'Total deal value calculated: {contract_value} \n')
     return contract_value
 
 def calculate_margin(client_burdens, company_liabilities):
@@ -276,10 +276,10 @@ def update_worksheet_value(data, worksheet):
     """
     Updates the worksheet with the calculated deal value into worksheet: deals, column: contract value
     """
-    print(f'saving deal to workseet...')
+    print(f'Saving deal to workseet...')
     worksheet_to_update = SHEET.worksheet(worksheet)
     worksheet_to_update.append_row([int(data)])
-    print(f'Deal saved to worksheet: {worksheet}')
+    print(f'Deal saved to worksheet: {worksheet} \n')
 
 def update_weekly_spread(data, worksheet):
     """
@@ -289,6 +289,7 @@ def update_weekly_spread(data, worksheet):
     worksheet_to_update = SHEET.worksheet(worksheet)
     last_row_index = len(worksheet_to_update.col_values(1))
     worksheet_to_update.update_cell(last_row_index, 2, float(data))
+    print(f'Weekly spread saved to {worksheet}')
 
 # Call the functions to start data collection
 def main():
@@ -307,6 +308,9 @@ def main():
     update_worksheet_pay(pay_rate, "margins")
     contract_value = calculate_deal_value(new_bill_data, contract_duration)
     save_contract_selected = update_worksheet_value(contract_value, "deals")
+    final_margin = calculate_margin(client_burdens, company_liabilities)
+    weekly_spread = calculate_weekly_spread(final_margin, new_bill_data, pay_rate)
+    save_weekly_spread = update_weekly_spread(weekly_spread, "deals")
     save_contract()
 
 if __name__ == "__main__":
