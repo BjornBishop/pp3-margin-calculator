@@ -232,7 +232,7 @@ def calculate_margin(client_burdens, company_liabilities):
     burden_float = float(client_burdens)
     rounded_burden = round(burden_float, 2)
     liabilities_float = float(company_liabilities)
-    rounded_liabilities = round(liabilities_float)
+    rounded_liabilities = round(liabilities_float, 2)
     second_margin = (rounded_burden + rounded_liabilities) + 100
     final_margin = second_margin / 100
     return final_margin
@@ -247,9 +247,9 @@ def calculate_weekly_spread(final_margin, new_bill_data, pay_rate):
     margin_float = float(final_margin)
     rounded_margin = round(margin_float, 2)
     bill_float = float(new_bill_data)
-    rounded_bill = round(bill_float)
+    rounded_bill = round(bill_float, 2)
     pay_float = float(pay_rate)
-    rounded_pay = round(pay_float)
+    rounded_pay = round(pay_float, 2)
     weekly_spread = (rounded_bill-(rounded_margin)*rounded_pay)*40
     return weekly_spread
 
