@@ -170,6 +170,17 @@ def get_liabilities():
             break
     return company_liabilities
 
+# function commented out as following up function requires additional time and logic. 
+#def get_total_spread():
+#    """
+#    Function to get the total amount of weekly spread
+#    """
+#    deals_worksheet = SHEET.worksheet('deals')
+#    spread_column = deals_worksheet.col_values(2)
+#    spread_values = [float(value) for value in spread_column if value]
+#    total_spread = sum(spread_values)
+#    return total_spread
+
 def save_contract():
     """
     Asks the user if the calculated deal value should be saved or discarded.
@@ -241,10 +252,6 @@ def calculate_weekly_spread(final_margin, new_bill_data, pay_rate):
     rounded_pay = round(pay_float)
     weekly_spread = (rounded_bill-(rounded_margin)*rounded_pay)*40
     return weekly_spread
-
-def calculate_total_weekly_spread():
-    get_spread = SHEET.worksheet('deals').get_all_values
-    spread_column = get_spread
 
 def update_worksheet_bill(data, worksheet):
     """
