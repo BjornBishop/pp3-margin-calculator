@@ -81,11 +81,11 @@ def validate_deal(save_contract_value):
     """
     try:
         if save_contract_value == "Y":
-            save_contract_selected
+            save_contract_selected = None
             return True
         elif save_contract_value == "N":
             print(f'Contract value discarded \n')
-            return False
+            pass
         else:
             raise ValueError("Invalid input. Please enter 'Y' or 'N'.")
     except ValueError as e:
@@ -180,7 +180,7 @@ def save_contract():
         print("If 'No', the calculation will be discarded \n")
         save_contract_value = input("Y/N: ")
         if validate_deal(save_contract_value):
-            print(f'Contract value saving...')
+            print(f'Contract value saving... \n')
             break
     return save_contract_value
 
