@@ -73,22 +73,23 @@ def validate_liabilities(company_liabilities):
         return False
     return True
 
-def validate_deal(save_contract_value, contract_value):
+def validate_deal(save_contract_value):
     """
-    inside the TRY, checks the input for Y/N value. 
-    Raise ValueError if data is incorrect or if maultiple values are added 
+    within the TRY there is an IF statement that checks if the input is Y or N. 
+    if Y - the contract value is saved to "deals" worksheet. 
+    if N - the values are discarded. 
     """
     try:
         if save_contract_value == "Y":
-            update_worksheet_value(contract_value, "deals")
+            save_contract_selected
             return True
         elif save_contract_value == "N":
-            print(f'Contract value {contract_value} discarded')
+            print(f'Contract value discarded \n')
             return False
         else:
             raise ValueError("Invalid input. Please enter 'Y' or 'N'.")
     except ValueError as e:
-        print(f'Invalid input: {e}. Please try again.')
+        print(f'Invalid input: {e}. Please try again. \n')
         return False
 
 
@@ -176,14 +177,10 @@ def save_contract():
     """
     while True:
         print("Would you like to save the calculated contract value?")
-        print("If 'No', the calculation will be discarded")
-
+        print("If 'No', the calculation will be discarded \n")
         save_contract_value = input("Y/N: ")
-
-        contract_value = calculate_deal_value(new_bill_data, contract_duration)
-
-        if validate_deal(save_contract_value, contract_value):
-            print(f'Contract value: {contract_value} saving...')
+        if validate_deal(save_contract_value):
+            print(f'Contract value saving...')
             break
     return save_contract_value
 
@@ -202,7 +199,6 @@ def calculate_deal_value(new_bill_data, contract_duration):
     """
     Calculates the total value of the contract based on the bill rate multiplied by the contract duration
     """
-    print(f'Calculating the contract value...')
     bill_int = int(new_bill_data)
     contract_int = int(contract_duration)
     contract_value = bill_int * contract_int
@@ -262,7 +258,7 @@ def update_worksheet_value(data, worksheet):
     """
     Updates the worksheet with the calculated deal value into worksheet: deals, column: contract value
     """
-    print(f'saving deal to worhseet...')
+    print(f'saving deal to workseet...')
     worksheet_to_update = SHEET.worksheet(worksheet)
     worksheet_to_update.append_row([int(data)])
     print(f'Deal saved to worksheet: {worksheet}')
@@ -283,6 +279,9 @@ def main():
     update_worksheet_liabilities(company_liabilities, "margins")
     pay_rate = calculate_pay_rate(new_bill_data, ideal_margin)
     update_worksheet_pay(pay_rate, "margins")
+    contract_value = calculate_deal_value(new_bill_data, contract_duration)
+    save_contract_selected = update_worksheet_value(contract_value, "deals")
     save_contract()
 
-main() 
+if __name__ == "__main__":
+    main()
