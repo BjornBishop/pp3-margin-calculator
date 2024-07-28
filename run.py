@@ -85,7 +85,7 @@ def validate_deal(save_contract_value):
             return True
         elif save_contract_value == "N":
             print(f'Contract value discarded \n')
-            pass
+            return False
         else:
             raise ValueError("Invalid input. Please enter 'Y' or 'N'.")
     except ValueError as e:
@@ -201,9 +201,27 @@ def calculate_deal_value(new_bill_data, contract_duration):
     """
     bill_int = int(new_bill_data)
     contract_int = int(contract_duration)
-    contract_value = bill_int * contract_int
+    hourly_contract = contract_int * 160
+    contract_value = bill_int * hourly_contract
     print(f'Total deal value calculated: {contract_value}')
     return contract_value
+
+def calculate_margin(client_burdens, company_liabilities):
+    burden_float = float(client_burdens)
+    rounded_burden = round(burden_float, 2)
+    second_margin = rounded_burden + 100
+    final_margin = second_margin / 100
+    return final_margin
+
+def calculate_weekly_spread(final_margin, new_bill_data, pay_rate):
+    margin_float = float(final_margin)
+    rounded_margin = round(margin_float, 2)
+    bill_float = float(new_bill_data)
+    rounded_bill = round(bill_float)
+    pay_float = float(pay_rate)
+    rounded_pay = round(pay_float)
+    weekly_spread = (rounded_bill-(rounded_margin)*rounded_pay)*40
+    return weekly_spread
 
 def update_worksheet_bill(data, worksheet):
     """
@@ -263,6 +281,14 @@ def update_worksheet_value(data, worksheet):
     worksheet_to_update.append_row([int(data)])
     print(f'Deal saved to worksheet: {worksheet}')
 
+def update_weekly_spread(data, worksheet):
+    """
+    updates the worksheet with the calculated weekly spread into worksheet: deals, column: weekly spread
+    """
+    print(f'Updating worksheet: {worksheet}')
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    last_row_index = len(worksheet_to_update.col_values(1))
+    worksheet_to_update.update_cell(last_row_index, 2, float(data))
 
 # Call the functions to start data collection
 def main():
