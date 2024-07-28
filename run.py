@@ -13,6 +13,7 @@ GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('margin-calculator')
 
 margins = SHEET.worksheet('margins')
+deals = SHEET.worksheet('deals')
 
 ideal_margin = 0.85
 
@@ -59,7 +60,7 @@ def validate_burdens(client_burdens):
 
 def validate_liabilities(company_liabilities):
     """
-    inside the TRY, conver the input data into a floating integer.
+    inside the TRY, convert the input data into a floating integer.
     Raise a ValueError if data can not be converted
     or if multiple values are input
     """
@@ -71,6 +72,25 @@ def validate_liabilities(company_liabilities):
         print(f'Invalid input {e}, please try again \n')
         return False
     return True
+
+def validate_deal(save_contract_value, contract_value):
+    """
+    inside the TRY, checks the input for Y/N value. 
+    Raise ValueError if data is incorrect or if maultiple values are added 
+    """
+    try:
+        if save_contract_value == "Y":
+            update_worksheet_value(contract_value, "deals")
+            return True
+        elif save_contract_value == "N":
+            print(f'Contract value {contract_value} discarded')
+            return False
+        else:
+            raise ValueError("Invalid input. Please enter 'Y' or 'N'.")
+    except ValueError as e:
+        print(f'Invalid input: {e}. Please try again.')
+        return False
+
 
 def get_bill_rate():
     """
@@ -148,9 +168,28 @@ def get_liabilities():
             break
     return company_liabilities
 
+def save_contract():
+    """
+    Asks the user if the calculated deal value should be saved or discarded.
+    Runs a WHILE loop to collect valid data from the user via the terminal.
+    The loop will repeat the request until valid input is entered.
+    """
+    while True:
+        print("Would you like to save the calculated contract value?")
+        print("If 'No', the calculation will be discarded")
+
+        save_contract_value = input("Y/N: ")
+
+        contract_value = calculate_deal_value(new_bill_data, contract_duration)
+
+        if validate_deal(save_contract_value, contract_value):
+            print(f'Contract value: {contract_value} saving...')
+            break
+    return save_contract_value
+
 def calculate_pay_rate(new_bill_data, ideal_margin):
     try:
-        bill_rate = float(new_bill_data)  # Convert input to a float
+        bill_rate = float(new_bill_data)  
     except ValueError:
         print("Invalid input. Please enter a valid numeric bill rate.")
         return None
@@ -158,6 +197,17 @@ def calculate_pay_rate(new_bill_data, ideal_margin):
     pay_rate = bill_rate * ideal_margin
     print(f"Pay rate calculated at: {pay_rate:.2f}")
     return pay_rate
+
+def calculate_deal_value(new_bill_data, contract_duration):
+    """
+    Calculates the total value of the contract based on the bill rate multiplied by the contract duration
+    """
+    print(f'Calculating the contract value...')
+    bill_int = int(new_bill_data)
+    contract_int = int(contract_duration)
+    contract_value = bill_int * contract_int
+    print(f'Total deal value calculated: {contract_value}')
+    return contract_value
 
 def update_worksheet_bill(data, worksheet):
     """
@@ -208,6 +258,16 @@ def update_worksheet_pay(data, worksheet):
     worksheet_to_update.update_cell(last_row_index, 5, int(data))
     print(f'Worksheet {worksheet} updated')
 
+def update_worksheet_value(data, worksheet):
+    """
+    Updates the worksheet with the calculated deal value into worksheet: deals, column: contract value
+    """
+    print(f'saving deal to worhseet...')
+    worksheet_to_update = SHEET.worksheet(worksheet)
+    worksheet_to_update.append_row([int(data)])
+    print(f'Deal saved to worksheet: {worksheet}')
+
+
 # Call the functions to start data collection
 def main():
     """
@@ -223,5 +283,6 @@ def main():
     update_worksheet_liabilities(company_liabilities, "margins")
     pay_rate = calculate_pay_rate(new_bill_data, ideal_margin)
     update_worksheet_pay(pay_rate, "margins")
+    save_contract()
 
 main() 
